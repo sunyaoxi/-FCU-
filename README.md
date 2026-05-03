@@ -10,20 +10,13 @@
 
 - `fcu_selection.py`：主程序，负责读取输入、完成焓湿计算、组合选型、导出 Excel。
 - `fcu_selection.spec`：PyInstaller 打包配置，入口文件就是 `fcu_selection.py`。
-- `dist/fcu_selection.exe`：按 `spec` 打包出的可执行文件。
 - `FCU选型程序.exe`：与 `dist/fcu_selection.exe` 的 SHA256 完全一致，是同一个最终程序的重命名副本。
 
-以下脚本不是主程序，属于公式推导或逆向分析过程中的辅助材料，现已收纳到 `archive/` 目录：
-
-- `archive/reverse_engineer.py`
-- `archive/analysis2.py`
-- `archive/analysis3.py`
-- `archive/analysis4.py`
 
 另外，已经验证过：
 
 - `fcu_selection.py` 对示例输入 `计算书.xlsx` 的计算结果，与仓库中的 `FCU_选型结果.xlsx`、`FCU_详细计算.xlsx` 数据逐列一致。
-- 因此，`fcu_selection.py` 可以视为当前仓库中可直接开源和继续维护的核心源码。
+
 
 ## 功能概览
 
@@ -295,59 +288,11 @@ pyinstaller fcu_selection.spec
 dist/fcu_selection.exe
 ```
 
-如果你希望使用与当前仓库一致的环境，仓库里还保留了一个本地虚拟环境目录 `build_env/`。不过开源时通常不建议提交整套虚拟环境，而应改为提供依赖清单。
-
-## 仓库结构建议
-
-当前仓库建议按下面的理解维护：
-
-```text
-.
-├─ .gitignore
-├─ README.md
-├─ requirements.txt
-├─ requirements-build.txt
-├─ archive/
-│  ├─ README.md
-│  ├─ reverse_engineer.py
-│  ├─ analysis2.py
-│  ├─ analysis3.py
-│  └─ analysis4.py
-├─ fcu_selection.py           # 主程序
-├─ fcu_selection.spec         # PyInstaller 打包配置
-├─ dist/fcu_selection.exe     # 打包产物
-├─ FCU选型程序.exe            # 发布用重命名副本
-├─ 计算书.xlsx                # 输入样例
-├─ FCU_选型结果.xlsx          # 输出样例
-├─ FCU_详细计算.xlsx          # 输出样例
-├─ build/                     # 本地打包缓存，可不提交
-├─ build_env/                 # 本地虚拟环境，可不提交
-└─ __pycache__/               # Python 缓存，可不提交
-```
-
-如果准备正式开源，通常建议：
-
-- 保留：`fcu_selection.py`、`fcu_selection.spec`、`README.md`、`requirements*.txt`、样例 Excel
-- 视情况保留：`dist/`、`FCU选型程序.exe`
-- 不再继续提交本地缓存：`build/`、`build_env/`、`__pycache__/`
-- 历史分析脚本已经归档在 `archive/`
-
 ## 已知限制
 
 - 输入文件名和工作表名当前是写死的，不支持命令行参数或图形界面选择。
 - FCU 型号库写在源码中，不是外部配置。
 - 组合选型目前只枚举最多 3 台设备。
 - 程序默认面向 Windows 本地 Excel 工作流。
-- 仓库当前仍保留历史构建缓存和虚拟环境目录，但 `.gitignore` 已避免继续提交这些本地文件。
 
-## 后续可改进方向
 
-- 增加命令行参数，允许自定义输入文件、工作表名、输出目录。
-- 将 FCU 型号库抽离为 `json` 或 `xlsx` 配置文件。
-- 增加日志和报错提示，便于非开发用户定位输入问题。
-- 增加单元测试，尤其是样例 Excel 的回归测试。
-- 增加 GUI，避免用户手动准备固定文件名。
-
-## 许可证
-
-当前仓库尚未声明许可证。若准备公开发布，建议补充 `LICENSE` 文件，明确开源授权范围。
